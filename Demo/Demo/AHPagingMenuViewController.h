@@ -137,7 +137,7 @@
 @property (nonatomic)                                             NSObject<AHPagingMenuDelegate> *delegate;
 
 /**
- *  Metodo init com parametros de execução da página - Position default
+ *  Metodo init - Position default 0
  *
  *  @param controllers Array with Controllers
  *  @param icons       Array with Title (UIImage or NSString)

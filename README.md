@@ -11,19 +11,7 @@ AHPagingMenuViewController 1.0. Menu Paging like UINavigationController used in 
 
 ##Installation
 
-1. Using [CocoaPods](http://cocoapods.org/). Easy, easy! Add this line to your Podfile:
-
-```ruby
-pod 'AHPagingMenuViewController'
-```
-
-So... Run this command:
-
-```ruby
-pod install
-```
-
-2. Add the AHPagingMenuViewController Folder into your project.
+1. Add the AHPagingMenuViewController Folder into your project. Easy, easy!
 
 
 ## How Use
@@ -43,11 +31,10 @@ Easy, easy! See more in Demo!
 
 ## Licence
 
-[MIT](https://github.com/pixyzehn/MediumMenu/blob/master/LICENSE)
+MIT
 
 ## Author
 
-[andrehenrique92](https://github.com/andrehenrique92)
-[site](http://andrehenrique.me)
-Problems ? Suggestions? Send to me! andre.henrique@me.com
+
+Problems ? Suggestions? Send to me! andre.henrique@me.com. [My Website](http://andrehenrique.me)
 Thank you! =D
