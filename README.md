@@ -23,8 +23,15 @@ Very easy! Just import the file
 ```
 So, alloc with your controllers and titles (NSString or UIImage)
 
+Obj-c
+
 ```objc
 AHPagingMenuViewController *AHController = [[AHPagingMenuViewController alloc] initWithControllers: @[v1,v2,v3] andMenuItens:@[[UIImage imageNamed:@"photo"],[UIImage imageNamed:@"heart", @"Title"]];
+```
+
+Swift
+```swift
+var AHController = AHPagingMenuViewController(controllers: [v1,v2,v3,v4,v5], icons: ["Page 1", "Page 2", "Page 3", "Page 4", "Page 5"])
 ```
 
 Easy, easy! See more in Demo!
