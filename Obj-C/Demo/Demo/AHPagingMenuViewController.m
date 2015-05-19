@@ -174,7 +174,7 @@
 
 -(void) viewDidLayoutSubviews
 {
-    //[super viewDidLayoutSubviews];
+    [super viewDidLayoutSubviews];
     [self.viewConteiner setFrame:CGRectMake(0, NAV_HEIGHT, self.view.frame.size.width, CONTENT_HEIGHT)];
     [self.viewConteiner setContentOffset:CGPointMake(_currentPage * self.viewConteiner.frame.size.width, self.viewConteiner.contentOffset.y)];
     [self.arrowLeft setCenter:CGPointMake( NAV_SPACE_VALUE, self.navView.center.y + ([UIApplication sharedApplication].statusBarFrame.size.height)/2.0)];
@@ -214,7 +214,6 @@
     [self.viewConteiner setContentSize:CGSizeMake(self.view.frame.size.width * count, CONTENT_HEIGHT)];
     
 }
-
 
 -(BOOL) shouldAutorotate
 {
@@ -600,13 +599,13 @@
         NSInteger currentPage = lround(fractionalPage);
         
         if(fractionalPage == currentPage && currentPage != _currentPage) {
-            
-            _currentPage = currentPage;
+        
             if(self.delegate)
             {
                 [self.delegate AHPagingMenuDidChangeMenuPositionFrom:_currentPage to:currentPage];
                 [self.delegate AHPagingMenuDidChangeMenuFrom:[_viewControllers objectAtIndex:_currentPage] to: [_viewControllers objectAtIndex:currentPage]];
             }
+            _currentPage = currentPage;
         }
         
         CGFloat porcent = fabs(fractionalPage - currentPage)/0.5;
