@@ -18,21 +18,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AHPagingMenuDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        var v1 = ExampleViewController.new()
+        let v1 = ExampleViewController()
         v1.view.backgroundColor = UIColor.blueColor()
-        var v2 = ExampleViewController.new()
+        let v2 = ExampleViewController()
         v2.view.backgroundColor = UIColor.blackColor()
-        var v3 = Example5ViewController(nibName: "Example5ViewController", bundle: nil)
-        var v4 = ExampleViewController.new()
+        let v3 = Example5ViewController(nibName: "Example5ViewController", bundle: nil)
+        let v4 = ExampleViewController()
         v4.view.backgroundColor = UIColor.greenColor()
-        var v5 = ExampleViewController.new()
+        let v5 = ExampleViewController()
         v5.view.backgroundColor = UIColor.grayColor()
         
         //Default
         // var controller = AHPagingMenuViewController(controllers: [v1,v2,v3,v4,v5], icons: ["Page 1", "Page 2", "Page 3", "Page 4", "Page 5"], position:2)
 
         //Like Tinder s2
-        var controller = AHPagingMenuViewController(controllers: [v1,v2,v3,v4,v5], icons: NSArray(array: [UIImage(named:"photo")!,UIImage(named:"heart")!, UIImage(named:"conf")!, UIImage(named:"message")!, UIImage(named:"map")! ]), position:2)
+        let controller = AHPagingMenuViewController(controllers: [v1,v2,v3,v4,v5], icons: NSArray(array: [UIImage(named:"photo")!,UIImage(named:"heart")!, UIImage(named:"conf")!, UIImage(named:"message")!, UIImage(named:"map")! ]), position:2)
         controller.setShowArrow(false)
         controller.setTransformScale(true)
         controller.setDissectColor(UIColor(white: 0.756, alpha: 1.0));

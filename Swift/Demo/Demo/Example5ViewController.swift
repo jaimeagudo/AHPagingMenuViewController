@@ -46,7 +46,7 @@ class Example5ViewController: UIViewController {
 
     @IBAction func addController(sender: AnyObject)
     {
-        var newController = ExampleViewController.new();
+        let newController = ExampleViewController()
         newController.view.backgroundColor = self.getRandomColor();
         self.pagingMenuViewController().addNewController(newController, title: "New \(current)")
         self.pagingMenuViewController().setPosition(self.pagingMenuViewController().viewControllers!.count - 1, animated: true)
@@ -81,7 +81,7 @@ class Example5ViewController: UIViewController {
     
     @IBAction func randonNavTitleTransform(sender: AnyObject)
     {
-        var scale = CGFloat(arc4random_uniform(10)) / 10.0
+        let scale = CGFloat(arc4random_uniform(10)) / 10.0
         self.pagingMenuViewController().setScaleMax(scale + 0.5, scaleMin: scale)
     }
 
@@ -102,9 +102,9 @@ class Example5ViewController: UIViewController {
     
     func getRandomColor() -> UIColor{
         
-        var randomRed:CGFloat = CGFloat(drand48())
-        var randomGreen:CGFloat = CGFloat(drand48())
-        var randomBlue:CGFloat = CGFloat(drand48())
+        let randomRed:CGFloat = CGFloat(drand48())
+        let randomGreen:CGFloat = CGFloat(drand48())
+        let randomBlue:CGFloat = CGFloat(drand48())
         return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
         
     }
