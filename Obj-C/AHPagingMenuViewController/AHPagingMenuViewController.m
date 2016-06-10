@@ -604,8 +604,11 @@
             _currentPage = currentPage;
             if(self.delegate)
             {
-                [self.delegate AHPagingMenuDidChangeMenuPositionFrom:_currentPage to:currentPage];
-                [self.delegate AHPagingMenuDidChangeMenuFrom:[_viewControllers objectAtIndex:_currentPage] to: [_viewControllers objectAtIndex:currentPage]];
+                if ([self.delegate respondsToSelector:@selector(pagingMenuDidChangeMenuPositionFrom:to:)])
+                    [self.delegate pagingMenuDidChangeMenuPositionFrom:_currentPage to:currentPage];
+                
+                if ([self.delegate respondsToSelector:@selector(AHPagingMenuDidChangeMenuFrom:to:)])
+                    [self.delegate AHPagingMenuDidChangeMenuFrom:[_viewControllers objectAtIndex:_currentPage] to: [_viewControllers objectAtIndex:currentPage]];
             }
         }
         
