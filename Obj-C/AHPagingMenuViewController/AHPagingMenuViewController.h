@@ -17,7 +17,7 @@
 
 //Default values
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-#define NAV_HEIGHT  45.0 + [UIApplication sharedApplication].statusBarFrame.size.height
+#define NAV_HEIGHT  (45.0 + [UIApplication sharedApplication].statusBarFrame.size.height)
 #define NAV_TITLE_SIZE 30
 #define NAV_SPACE_VALUE 15
 #define NAV_SCALE_MAX 1.0
