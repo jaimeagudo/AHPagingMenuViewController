@@ -21,7 +21,7 @@ import ObjectiveC
     - parameter form: position initial
     - parameter to:   position final
     */
-    optional func AHPagingMenuDidChangeMenuPosition(form: NSInteger, to: NSInteger);
+    @objc optional func AHPagingMenuDidChangeMenuPosition(_ form: NSInteger, to: NSInteger);
     
     /**
     Change position obj
@@ -29,18 +29,18 @@ import ObjectiveC
     - parameter form: obj initial
     - parameter to:   obj final
     */
-    optional func AHPagingMenuDidChangeMenuFrom(form: AnyObject, to: AnyObject);
+    @objc optional func AHPagingMenuDidChangeMenuFrom(_ form: AnyObject, to: AnyObject);
 }
 
 
 var AHPagingMenuViewControllerKey: UInt8 = 0
 extension UIViewController {
     
-    func setAHPagingController(menuViewController: AHPagingMenuViewController)
+    func setAHPagingController(_ menuViewController: AHPagingMenuViewController)
     {
-        self.willChangeValueForKey("AHPagingMenuViewController")
+        self.willChangeValue(forKey: "AHPagingMenuViewController")
         objc_setAssociatedObject(self,  &AHPagingMenuViewControllerKey, menuViewController, objc_AssociationPolicy.OBJC_ASSOCIATION_ASSIGN)
-        self.didChangeValueForKey("AHPagingMenuViewController")
+        self.didChangeValue(forKey: "AHPagingMenuViewController")
     }
     
     func pagingMenuViewController() -> AHPagingMenuViewController
@@ -75,15 +75,15 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     internal var delegate:        AHPagingMenuDelegate?
     
     internal var NAV_SPACE_VALUE:  CGFloat = 15.0
-    internal var NAV_HEIGHT:       CGFloat = 45.0 + (UIApplication.sharedApplication().statusBarFrame.size.height)
+    internal var NAV_HEIGHT:       CGFloat = 45.0 + (UIApplication.shared.statusBarFrame.size.height)
     internal var NAV_TITLE_SIZE:   CGFloat = 30.0
     
     //Publics
-    private var navView:       UIView?
-    private var navLine:       UIView?
-    private var viewContainer: UIScrollView?
-    private var arrowRight:    UIImageView?
-    private var arrowLeft:     UIImageView?
+    fileprivate var navView:       UIView?
+    fileprivate var navLine:       UIView?
+    fileprivate var viewContainer: UIScrollView?
+    fileprivate var arrowRight:    UIImageView?
+    fileprivate var arrowLeft:     UIImageView?
     
     // MARK: inits
     
@@ -110,34 +110,34 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     override func loadView()
     {
         super.loadView()
-        self.view.backgroundColor = UIColor.whiteColor();
+        self.view.backgroundColor = UIColor.white;
         
         let viewConteiner                            = UIScrollView()
         viewConteiner.delegate                       = self
-        viewConteiner.pagingEnabled                  = true
+        viewConteiner.isPagingEnabled                  = true
         viewConteiner.showsHorizontalScrollIndicator = false
         viewConteiner.showsVerticalScrollIndicator   = false
-        viewConteiner.contentSize                    = CGSizeMake(0,0)
+        viewConteiner.contentSize                    = CGSize(width: 0,height: 0)
         self.view.addSubview(viewConteiner)
         self.viewContainer = viewConteiner
         
         let navView                                  = UIView()
-        navView.backgroundColor                      = UIColor.whiteColor()
+        navView.backgroundColor                      = UIColor.white
         navView.clipsToBounds                        = true
         self.view.addSubview(navView)
         self.navView                                 = navView
         
         let arrowRight = UIImageView(image: UIImage(named:"arrowRight"))
-        arrowRight.userInteractionEnabled = true
-        arrowRight.addGestureRecognizer(UITapGestureRecognizer(target:self, action:Selector("goNextView")))
-        arrowRight.image = arrowRight.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        arrowRight.isUserInteractionEnabled = true
+        arrowRight.addGestureRecognizer(UITapGestureRecognizer(target:self, action:#selector(AHPagingMenuViewController.goNextView)))
+        arrowRight.image = arrowRight.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         self.navView?.addSubview(arrowRight)
         self.arrowRight = arrowRight;
         
         let arrowLeft = UIImageView(image: UIImage(named:"arrowLeft"))
-        arrowLeft.userInteractionEnabled = true
-        arrowLeft.addGestureRecognizer(UITapGestureRecognizer(target:self, action:Selector("goPrevieusView")))
-        arrowLeft.image = arrowLeft.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        arrowLeft.isUserInteractionEnabled = true
+        arrowLeft.addGestureRecognizer(UITapGestureRecognizer(target:self, action:#selector(AHPagingMenuViewController.goPrevieusView)))
+        arrowLeft.image = arrowLeft.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         self.navView?.addSubview(arrowLeft)
         self.arrowLeft = arrowLeft
         
@@ -154,15 +154,15 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         var count = 0
         for controller in self.viewControllers!
         {
-            self.includeControllerOnInterface(controller as! UIViewController, titleView: self.iconsMenu!.objectAtIndex(count) as! UIView, tag: count)
-            count++
+            self.includeControllerOnInterface(controller as! UIViewController, titleView: self.iconsMenu!.object(at: count) as! UIView, tag: count)
+            count += 1
         }
         
-        self.viewContainer?.setContentOffset(CGPointMake(CGFloat(self.currentPage!) * self.viewContainer!.frame.size.width, self.viewContainer!.contentOffset.y), animated: false)
+        self.viewContainer?.setContentOffset(CGPoint(x: CGFloat(self.currentPage!) * self.viewContainer!.frame.size.width, y: self.viewContainer!.contentOffset.y), animated: false)
         
     }
     
-    override func viewDidAppear(animated: Bool)
+    override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
         self.resetNavBarConfig();
@@ -172,30 +172,30 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     {
         super.viewDidLayoutSubviews()
         
-        NAV_HEIGHT = 45.0 + UIApplication.sharedApplication().statusBarFrame.size.height
-        self.viewContainer?.frame = CGRectMake(0, NAV_HEIGHT, self.view.frame.size.width, self.view.frame.size.height - NAV_HEIGHT)
-        self.viewContainer?.contentOffset = CGPointMake(CGFloat(self.currentPage) * self.viewContainer!.frame.size.width, self.viewContainer!.contentOffset.y)
-        self.arrowLeft?.center = CGPointMake( NAV_SPACE_VALUE, self.navView!.center.y + (UIApplication.sharedApplication().statusBarFrame.size.height)/2.0)
-        self.arrowRight?.center = CGPointMake( self.view.frame.size.width - NAV_SPACE_VALUE , self.navView!.center.y + (UIApplication.sharedApplication().statusBarFrame.size.height)/2.0)
-        self.navView?.frame = CGRectMake( 0, 0, self.view.frame.size.width, NAV_HEIGHT)
-        self.navLine?.frame = CGRectMake( 0.0, self.navView!.frame.size.height, self.navView!.frame.size.width, 1.0)
+        NAV_HEIGHT = 45.0 + UIApplication.shared.statusBarFrame.size.height
+        self.viewContainer?.frame = CGRect(x: 0, y: NAV_HEIGHT, width: self.view.frame.size.width, height: self.view.frame.size.height - NAV_HEIGHT)
+        self.viewContainer?.contentOffset = CGPoint(x: CGFloat(self.currentPage) * self.viewContainer!.frame.size.width, y: self.viewContainer!.contentOffset.y)
+        self.arrowLeft?.center = CGPoint( x: NAV_SPACE_VALUE, y: self.navView!.center.y + (UIApplication.shared.statusBarFrame.size.height)/2.0)
+        self.arrowRight?.center = CGPoint( x: self.view.frame.size.width - NAV_SPACE_VALUE , y: self.navView!.center.y + (UIApplication.shared.statusBarFrame.size.height)/2.0)
+        self.navView?.frame = CGRect( x: 0, y: 0, width: self.view.frame.size.width, height: NAV_HEIGHT)
+        self.navLine?.frame = CGRect( x: 0.0, y: self.navView!.frame.size.height, width: self.navView!.frame.size.width, height: 1.0)
         
         var count = 0;
         for controller in self.viewControllers! as NSArray as! [UIViewController]
         {
-            controller.view.frame = CGRectMake(self.view.frame.size.width * CGFloat(count), 0, self.view.frame.size.width, self.view.frame.size.height - NAV_HEIGHT)
+            controller.view.frame = CGRect(x: self.view.frame.size.width * CGFloat(count), y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height - NAV_HEIGHT)
             
-            let titleView = self.iconsMenu?.objectAtIndex(count) as! UIView
+            let titleView = self.iconsMenu?.object(at: count) as! UIView
             let affine = titleView.transform
-            titleView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            titleView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             
-            if(titleView.isKindOfClass(UIImageView))
+            if(titleView.isKind(of: UIImageView.self))
             {
                 let icon = titleView as! UIImageView;
-                titleView.frame = CGRectMake( 50.0 * CGFloat(count), 0, ( icon.image != nil ? (NAV_TITLE_SIZE * icon.image!.size.width) / icon.image!.size.height : NAV_TITLE_SIZE ) , NAV_TITLE_SIZE)
+                titleView.frame = CGRect( x: 50.0 * CGFloat(count), y: 0, width: ( icon.image != nil ? (NAV_TITLE_SIZE * icon.image!.size.width) / icon.image!.size.height : NAV_TITLE_SIZE ) , height: NAV_TITLE_SIZE)
                 
             }
-            else if(titleView.isKindOfClass(UILabel))
+            else if(titleView.isKind(of: UILabel.self))
             {
                 titleView.sizeToFit()
             }
@@ -207,44 +207,44 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
             
             
             let spacing  = (self.view.frame.size.width/2.0) - self.NAV_SPACE_VALUE - titleView.frame.size.width/2.0 - CGFloat( self.showArrow! ? self.arrowLeft!.image!.size.width : 0.0)
-            titleView.center = CGPointMake(self.navView!.center.x + (spacing * CGFloat(count)) - (CGFloat(self.currentPage) * spacing) , self.navView!.center.y + (UIApplication.sharedApplication().statusBarFrame.size.height)/2.0)
-            count++
+            titleView.center = CGPoint(x: self.navView!.center.x + (spacing * CGFloat(count)) - (CGFloat(self.currentPage) * spacing) , y: self.navView!.center.y + (UIApplication.shared.statusBarFrame.size.height)/2.0)
+            count += 1
         }
         
-        self.viewContainer?.contentSize = CGSizeMake(self.view.frame.size.width * CGFloat(count), self.view.frame.size.height - NAV_HEIGHT)
+        self.viewContainer?.contentSize = CGSize(width: self.view.frame.size.width * CGFloat(count), height: self.view.frame.size.height - NAV_HEIGHT)
         
     }
     
-    override func shouldAutorotate() -> Bool
+    override var shouldAutorotate : Bool
     {
         return true;
     }
     
     // MARK: Methods Public
     
-    internal func addNewController(controller:UIViewController, title: AnyObject)
+    internal func addNewController(_ controller:UIViewController, title: AnyObject)
     {
-        self.viewControllers?.addObject(controller);
+        self.viewControllers?.add(controller);
         
-        if title.isKindOfClass(NSString)
+        if title.isKind(of: NSString.self)
         {
             let label = UILabel()
             label.text = title as? String;
-            self.iconsMenu?.addObject(label);
+            self.iconsMenu?.add(label);
             self.includeControllerOnInterface(controller, titleView: label, tag: self.iconsMenu!.count - 1)
         }
-        else if title.isKindOfClass(UIImage)
+        else if title.isKind(of: UIImage.self)
         {
             let image = UIImageView(image: title as? UIImage)
-            image.image = image.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-            image.contentMode = UIViewContentMode.ScaleAspectFill
-            self.iconsMenu!.addObject(image)
+            image.image = image.image!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            image.contentMode = UIViewContentMode.scaleAspectFill
+            self.iconsMenu!.add(image)
             self.includeControllerOnInterface(controller, titleView: image, tag: self.iconsMenu!.count - 1)
             
         }
         else
         {
-            NSException(name:"ClassRequeredNotFoundException", reason:"Not Allowed Class. NSString or UIImage Please!", userInfo:nil).raise()
+            NSException(name:NSExceptionName(rawValue: "ClassRequeredNotFoundException"), reason:"Not Allowed Class. NSString or UIImage Please!", userInfo:nil).raise()
         }
         
         self.viewDidLayoutSubviews()
@@ -252,10 +252,10 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         
     }
     
-    internal func setPosition(position: NSInteger, animated:Bool)
+    internal func setPosition(_ position: NSInteger, animated:Bool)
     {
         self.currentPage = position
-        self.viewContainer?.setContentOffset(CGPointMake( CGFloat(self.currentPage!) * self.viewContainer!.frame.size.width, self.viewContainer!.contentOffset.y), animated: animated)
+        self.viewContainer?.setContentOffset(CGPoint( x: CGFloat(self.currentPage!) * self.viewContainer!.frame.size.width, y: self.viewContainer!.contentOffset.y), animated: animated)
     }
     
     internal func goNextView()
@@ -282,13 +282,13 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         for titleView in self.iconsMenu! as NSArray as! [UIView]
         {
             
-            if(titleView.isKindOfClass(UIImageView))
+            if(titleView.isKind(of: UIImageView.self))
             {
                 titleView.tintColor =  self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor
             }
             else
             {
-                if( titleView.isKindOfClass(UILabel))
+                if( titleView.isKind(of: UILabel.self))
                 {
                     let titleText = titleView as! UILabel
                     titleText.textColor = self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor
@@ -299,9 +299,9 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
             }
             
             let transform = (self.transformScale! ? ( count == self.currentPage ? self.scaleMax: self.scaleMin): self.scaleMax)
-            titleView.transform = CGAffineTransformMakeScale(transform!, transform!)
+            titleView.transform = CGAffineTransform(scaleX: transform!, y: transform!)
             
-            count++
+            count += 1
         }
         
         self.arrowLeft!.alpha = (self.showArrow! ? (self.currentPage == 0 ? 0.0 : 1.0) :0.0);
@@ -312,7 +312,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: Methods Private
     
-    private func inicializeValues(viewControllers: NSArray!, iconsMenu: NSArray!, position: NSInteger!)
+    fileprivate func inicializeValues(_ viewControllers: NSArray!, iconsMenu: NSArray!, position: NSInteger!)
     {
         
         let elementsController = NSMutableArray();
@@ -320,15 +320,15 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         for controller in viewControllers
         {
             
-            if controller.isKindOfClass(UIViewController)
+            if (controller as AnyObject).isKind(of: UIViewController.self)
             {
                 let controller_element = controller as! UIViewController
                 controller_element.setAHPagingController(self)
-                elementsController.addObject(controller)
+                elementsController.add(controller)
             }
             else
             {
-                NSException(name:"ClassRequeredNotFoundException", reason:"Not Allowed Class. Controller Please", userInfo:nil).raise()
+                NSException(name:NSExceptionName(rawValue: "ClassRequeredNotFoundException"), reason:"Not Allowed Class. Controller Please", userInfo:nil).raise()
             }
             
         }
@@ -337,28 +337,28 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         let iconsController = NSMutableArray();
         for icon in iconsMenu
         {
-            if icon.isKindOfClass(NSString)
+            if (icon as AnyObject).isKind(of: NSString.self)
             {
                 let label = UILabel()
                 label.text = icon as? String
-                iconsController.addObject(label)
+                iconsController.add(label)
             }
-            else if(icon.isKindOfClass(UIImage))
+            else if((icon as AnyObject).isKind(of: UIImage.self))
             {
                 let imageView = UIImageView(image: icon as? UIImage)
-                imageView.image = imageView.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-                imageView.contentMode = UIViewContentMode.ScaleAspectFill
-                iconsController.addObject(imageView)
+                imageView.image = imageView.image!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                imageView.contentMode = UIViewContentMode.scaleAspectFill
+                iconsController.add(imageView)
             }
             else
             {
-                NSException(name:"ClassRequeredNotFoundException", reason:"Not Allowed Class. NSString or UIImage Please!", userInfo:nil).raise()
+                NSException(name:NSExceptionName(rawValue: "ClassRequeredNotFoundException"), reason:"Not Allowed Class. NSString or UIImage Please!", userInfo:nil).raise()
             }
         }
         
         if(iconsController.count != elementsController.count)
         {
-            NSException(name:"TitleAndControllersException", reason:"Title and controllers not match", userInfo:nil).raise()
+            NSException(name:NSExceptionName(rawValue: "TitleAndControllersException"), reason:"Title and controllers not match", userInfo:nil).raise()
         }
         
         self.bounce                = true
@@ -367,7 +367,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         self.transformScale        = false
         self.changeFont            = true
         self.changeColor           = true
-        self.selectedColor         = UIColor.blackColor()
+        self.selectedColor         = UIColor.black
         self.dissectedColor        = UIColor(red: 0.0 , green: 122.0/255.0, blue: 1.0, alpha: 1.0)
         self.selectedFont          = UIFont(name: "HelveticaNeue-Medium", size: 16)!
         self.dissectedFont         = UIFont(name: "HelveticaNeue", size: 16)!
@@ -379,24 +379,24 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         
     }
     
-    private func includeControllerOnInterface(controller: UIViewController, titleView:UIView, tag:(NSInteger))
+    fileprivate func includeControllerOnInterface(_ controller: UIViewController, titleView:UIView, tag:(NSInteger))
     {
         
         controller.view.clipsToBounds = true;
-        controller.view.frame = CGRectMake(self.viewContainer!.contentSize.width, 0.0, self.view.frame.size.width, self.view.frame.size.height - NAV_HEIGHT)
-        self.viewContainer?.contentSize = CGSizeMake(self.view.frame.size.width + self.viewContainer!.contentSize.width, self.view.frame.size.height - NAV_HEIGHT)
+        controller.view.frame = CGRect(x: self.viewContainer!.contentSize.width, y: 0.0, width: self.view.frame.size.width, height: self.view.frame.size.height - NAV_HEIGHT)
+        self.viewContainer?.contentSize = CGSize(width: self.view.frame.size.width + self.viewContainer!.contentSize.width, height: self.view.frame.size.height - NAV_HEIGHT)
         self.addChildViewController(controller)
-        controller.didMoveToParentViewController(self)
+        controller.didMove(toParentViewController: self)
         self.viewContainer?.addSubview(controller.view)
         
-        let tap = UITapGestureRecognizer(target:self, action:Selector("tapOnButton:"))
+        let tap = UITapGestureRecognizer(target:self, action:#selector(AHPagingMenuViewController.tapOnButton(_:)))
         titleView.addGestureRecognizer(tap)
-        titleView.userInteractionEnabled = true;
+        titleView.isUserInteractionEnabled = true;
         titleView.tag = tag
         self.navView?.addSubview(titleView);
     }
     
-    func tapOnButton(sender: UITapGestureRecognizer)
+    func tapOnButton(_ sender: UITapGestureRecognizer)
     {
         if sender.view!.tag != self.currentPage
         {
@@ -408,7 +408,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         
     }
     
-    private func changeColorFrom(fromColor: (UIColor), toColor: UIColor, porcent:(CGFloat)) ->UIColor
+    fileprivate func changeColorFrom(_ fromColor: (UIColor), toColor: UIColor, porcent:(CGFloat)) ->UIColor
     {
         var redStart: CGFloat = 0
         var greenStart : CGFloat = 0
@@ -427,40 +427,40 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: Setters
     
-    internal func setBounce(bounce: Bool)
+    internal func setBounce(_ bounce: Bool)
     {
         self.viewContainer?.bounces = bounce;
         self.bounce = bounce;
     }
     
-    internal func setFade(fade: Bool)
+    internal func setFade(_ fade: Bool)
     {
         self.fade = fade;
     }
     
-    internal func setTransformScale(transformScale: Bool)
+    internal func setTransformScale(_ transformScale: Bool)
     {
         self.transformScale = transformScale
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
                 let transform = (self.transformScale! ? ( count == self.currentPage ? self.scaleMax: self.scaleMin): self.scaleMax);
-                titleView.transform = CGAffineTransformMakeScale(transform, transform)
-                count++
+                titleView.transform = CGAffineTransform(scaleX: transform!, y: transform!)
+                count += 1
             }
         }
     }
     
-    internal func setShowArrow(showArrow: Bool)
+    internal func setShowArrow(_ showArrow: Bool)
     {
         self.showArrow = showArrow;
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
-            UIView .animateWithDuration(0.3, animations: { () -> Void in
+            UIView .animate(withDuration: 0.3, animations: { () -> Void in
                 self.arrowLeft?.alpha = (self.showArrow! ? (self.currentPage == 0 ? 0.0 : 1.0) : 0.0)
                 self.arrowRight?.alpha = (self.showArrow! ? (self.currentPage == self.viewControllers!.count - 1 ? 0.0 : 1.0) :0.0)
                 self.viewDidLayoutSubviews()
@@ -468,162 +468,162 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         }
     }
     
-    internal func setChangeFont(changeFont:Bool)
+    internal func setChangeFont(_ changeFont:Bool)
     {
         self.changeFont = changeFont
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UILabel)
+                if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.font = self.changeFont! ? ( count == self.currentPage ? self.selectedFont : self.dissectedFont ) : self.selectedFont
                     titleView.sizeToFit()
                 }
                 
-                count++
+                count += 1
             }
         }
     }
     
-    internal func setChangeColor(changeColor: Bool)
+    internal func setChangeColor(_ changeColor: Bool)
     {
         self.changeColor = changeColor;
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UIImageView)
+                if titleView.isKind(of: UIImageView.self)
                 {
                     titleView.tintColor = self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor
                 }
-                else if titleView.isKindOfClass(UILabel)
+                else if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.textColor = (self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor)
                 }
                 
-                count++
+                count += 1
             }
             self.arrowLeft?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
             self.arrowRight?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
         }
     }
     
-    internal func setSelectColor(selectedColor: UIColor)
+    internal func setSelectColor(_ selectedColor: UIColor)
     {
         self.selectedColor = selectedColor
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UIImageView)
+                if titleView.isKind(of: UIImageView.self)
                 {
                     titleView.tintColor = self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor
                 }
-                else if titleView.isKindOfClass(UILabel)
+                else if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.textColor = (self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor)
                 }
                 
-                count++
+                count += 1
             }
             self.arrowLeft?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
             self.arrowRight?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
         }
     }
     
-    internal func setDissectColor(dissectedColor: UIColor)
+    internal func setDissectColor(_ dissectedColor: UIColor)
     {
         self.dissectedColor = dissectedColor
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UIImageView)
+                if titleView.isKind(of: UIImageView.self)
                 {
                     titleView.tintColor = self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor
                 }
-                else if titleView.isKindOfClass(UILabel)
+                else if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.textColor = (self.changeColor! ? (count == self.currentPage ? self.selectedColor: self.dissectedColor) :  self.selectedColor)
                 }
                 
-                count++
+                count += 1
             }
             self.arrowLeft?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
             self.arrowRight?.tintColor = (self.changeColor! ? self.dissectedColor :  self.selectedColor);
         }
     }
     
-    internal func setSelectFont(selectedFont: UIFont)
+    internal func setSelectFont(_ selectedFont: UIFont)
     {
         self.selectedFont = selectedFont
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UILabel)
+                if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.font = self.changeFont! ? ( count == self.currentPage ? self.selectedFont : self.dissectedFont ) : self.selectedFont
                     titleView.sizeToFit()
                 }
                 
-                count++
+                count += 1
             }
         }
     }
     
-    internal func setDissectFont(dissectedFont: UIFont)
+    internal func setDissectFont(_ dissectedFont: UIFont)
     {
         self.dissectedFont = selectedFont
         
-        if (self.isViewLoaded() && self.view.window != nil)
+        if (self.isViewLoaded && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
-                if titleView.isKindOfClass(UILabel)
+                if titleView.isKind(of: UILabel.self)
                 {
                     let title = titleView as! UILabel
                     title.font = self.changeFont! ? ( count == self.currentPage ? self.selectedFont : self.dissectedFont ) : self.selectedFont
                     titleView.sizeToFit()
                 }
                 
-                count++
+                count += 1
             }
         }
     }
     
-    internal func setContentBackgroundColor(backgroundColor: UIColor)
+    internal func setContentBackgroundColor(_ backgroundColor: UIColor)
     {
         self.viewContainer?.backgroundColor = backgroundColor
     }
     
-    internal func setNavBackgroundColor(backgroundColor: UIColor)
+    internal func setNavBackgroundColor(_ backgroundColor: UIColor)
     {
         self.navView?.backgroundColor = backgroundColor
     }
     
-    internal func setNavLineBackgroundColor(backgroundColor: UIColor)
+    internal func setNavLineBackgroundColor(_ backgroundColor: UIColor)
     {
         self.navLine?.backgroundColor = backgroundColor
     }
     
-    internal func setScaleMax(scaleMax: CGFloat, scaleMin:CGFloat)
+    internal func setScaleMax(_ scaleMax: CGFloat, scaleMin:CGFloat)
     {
         if scaleMax < scaleMin || scaleMin < 0.0  || scaleMax < 0.0
         {
@@ -633,21 +633,21 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
         self.scaleMax = scaleMax;
         self.scaleMin = scaleMin;
         
-        if (self.isViewLoaded() && self.transformScale == true && self.view.window != nil)
+        if (self.isViewLoaded && self.transformScale == true && self.view.window != nil)
         {
             var count = 0
             for titleView in self.iconsMenu! as NSArray as! [UIView]
             {
                 let transform = (self.transformScale! ? ( count == self.currentPage ? self.scaleMax: self.scaleMin): self.scaleMax);
                 
-                titleView.transform = CGAffineTransformMakeScale(transform,transform)
+                titleView.transform = CGAffineTransform(scaleX: transform!,y: transform!)
                 
-                if titleView.isKindOfClass(UILabel)
+                if titleView.isKind(of: UILabel.self)
                 {
                     titleView.sizeToFit()
                 }
                 
-                count++
+                count += 1
             }
         }
         
@@ -655,7 +655,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
     
     // MARK: UIScrollViewDelegate
     
-    func scrollViewDidScroll(scrollView: UIScrollView)
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         
         if scrollView == self.viewContainer
@@ -667,7 +667,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
             if fractionalPage == Float(currentPage) && currentPage != self.currentPage
             {
                 self.delegate?.AHPagingMenuDidChangeMenuPosition?(self.currentPage, to: currentPage)
-                self.delegate?.AHPagingMenuDidChangeMenuFrom?(self.viewControllers!.objectAtIndex(self.currentPage), to: self.viewControllers!.objectAtIndex(currentPage))
+                self.delegate?.AHPagingMenuDidChangeMenuFrom?(self.viewControllers!.object(at: self.currentPage) as AnyObject, to: self.viewControllers!.object(at: currentPage) as AnyObject)
                 self.currentPage = currentPage;
                 
             }
@@ -706,10 +706,10 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
                 
                 let spacing  = (self.view.frame.size.width/2.0) - self.NAV_SPACE_VALUE - titleView.frame.size.width/2 - (self.showArrow! ? self.arrowLeft!.image!.size.width : 0.0)
                 
-                titleView.center = CGPointMake(self.navView!.center.x + (spacing * CGFloat(count)) - (CGFloat(fractionalPage) * spacing), self.navView!.center.y + (UIApplication.sharedApplication().statusBarFrame.size.height/2.0))
+                titleView.center = CGPoint(x: self.navView!.center.x + (spacing * CGFloat(count)) - (CGFloat(fractionalPage) * spacing), y: self.navView!.center.y + (UIApplication.shared.statusBarFrame.size.height/2.0))
                 let distance_center = CGFloat(fabs(titleView.center.x - self.navView!.center.x))
                 
-                if titleView.isKindOfClass(UIImageView)
+                if titleView.isKind(of: UIImageView.self)
                 {
                     if( distance_center < spacing)
                     {
@@ -719,7 +719,7 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
                         }
                     }
                 }
-                else if titleView.isKindOfClass(UILabel)
+                else if titleView.isKind(of: UILabel.self)
                 {
                     let titleText = titleView as! UILabel;
                     
@@ -743,10 +743,10 @@ class AHPagingMenuViewController: UIViewController, UIScrollViewDelegate
                 if (self.transformScale! && count <= (currentPage + 1) && count >= (currentPage - 1))
                 {
                     let transform = CGFloat(self.scaleMax! + ((self.scaleMax! - self.scaleMin!) * (-distance_center/spacing)))
-                    titleView.transform = CGAffineTransformMakeScale(transform, transform);
+                    titleView.transform = CGAffineTransform(scaleX: transform, y: transform);
                 }
                 
-                count++;
+                count += 1;
             }
             
         }

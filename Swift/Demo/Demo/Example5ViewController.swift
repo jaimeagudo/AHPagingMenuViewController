@@ -12,90 +12,93 @@ class Example5ViewController: UIViewController {
     
     var current = 1;
     
-    @IBAction func randonNavColor(sender: AnyObject) {
+    @IBAction func randonNavColor(_ sender: AnyObject) {
     
     }
 
-    @IBAction func randNavColorMain(sender: AnyObject) {
+    @IBAction func randNavColorMain(_ sender: AnyObject) {
         self.pagingMenuViewController().setChangeColor(!self.pagingMenuViewController().changeFont)
     }
  
-    @IBAction func changeFont(sender: AnyObject) {
+    @IBAction func changeFont(_ sender: AnyObject) {
         self.pagingMenuViewController().setChangeFont(!self.pagingMenuViewController().changeFont)
     }
 
-    @IBAction func changeFace(sender: AnyObject) {
+    @IBAction func changeFace(_ sender: AnyObject) {
         self.pagingMenuViewController().setFade(!self.pagingMenuViewController().fade)
     }
     
-    @IBAction func changeTransform(sender: AnyObject)
+    @IBAction func changeTransform(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setTransformScale(!self.pagingMenuViewController().transformScale);
     }
     
-    @IBAction func changeArrow(sender: AnyObject)
+    @IBAction func changeArrow(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setShowArrow(!self.pagingMenuViewController().showArrow)
     }
     
-    @IBAction func goFirst(sender: AnyObject)
+    @IBAction func goFirst(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setPosition(0 , animated: true)
     
     }
 
-    @IBAction func addController(sender: AnyObject)
+    @IBAction func addController(_ sender: AnyObject)
     {
         let newController = ExampleViewController()
         newController.view.backgroundColor = self.getRandomColor();
-        self.pagingMenuViewController().addNewController(newController, title: "New \(current)")
+        self.pagingMenuViewController().addNewController(newController, title: "New \(current)" as AnyObject)
         self.pagingMenuViewController().setPosition(self.pagingMenuViewController().viewControllers!.count - 1, animated: true)
-        self.current++;
+        self.current += 1;
     }
     
-    @IBAction func goLast(sender: AnyObject)
+    @IBAction func goLast(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setPosition(self.pagingMenuViewController().viewControllers!.count - 1, animated: true)
     
     }
     
-    @IBAction func goNext(sender: AnyObject)
+    @IBAction func goNext(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setPosition(self.pagingMenuViewController().currentPage + 1, animated: true)
     }
     
-    @IBAction func goPrevius(sender: AnyObject)
+    @IBAction func goPrevius(_ sender: AnyObject)
     {
          self.pagingMenuViewController().setPosition(self.pagingMenuViewController().currentPage - 1, animated: true)
     }
     
-    @IBAction func changeSecondFont(sender: AnyObject)
+    @IBAction func changeSecondFont(_ sender: AnyObject)
     {
-        self.pagingMenuViewController().setDissectFont(UIFont(name: "Chalkduster", size: 16)!)
+        let font = UIFont.init(name: "Chalkduster", size: CGFloat(16))
+        self.pagingMenuViewController().setDissectFont(font!)
+
     }
     
-    @IBAction func changeMainFont(sender: AnyObject)
+    @IBAction func changeMainFont(_ sender: AnyObject)
     {
-          self.pagingMenuViewController().setSelectFont(UIFont(name: "BradleyHandITCTT-Bold", size: 16)!)
+        let font = UIFont.init(name: "BradleyHandITCTT-Bold", size: CGFloat(16))
+        self.pagingMenuViewController().setSelectFont(font!)
     }
     
-    @IBAction func randonNavTitleTransform(sender: AnyObject)
+    @IBAction func randonNavTitleTransform(_ sender: AnyObject)
     {
         let scale = CGFloat(arc4random_uniform(10)) / 10.0
         self.pagingMenuViewController().setScaleMax(scale + 0.5, scaleMin: scale)
     }
 
-    @IBAction func randonSecondColor(sender: AnyObject)
+    @IBAction func randonSecondColor(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setDissectColor(self.getRandomColor())
     }
     
-    @IBAction func randonFirstColor(sender: AnyObject)
+    @IBAction func randonFirstColor(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setSelectColor(self.getRandomColor())
     }
     
-    @IBAction func changeBounce(sender: AnyObject)
+    @IBAction func changeBounce(_ sender: AnyObject)
     {
         self.pagingMenuViewController().setBounce(!self.pagingMenuViewController().bounce)
     }
