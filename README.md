@@ -3,11 +3,23 @@ AHPagingMenuViewController
 
 AHPagingMenuViewController 1.0. Menu Paging like UINavigationController used in Tinder! Highly customizable
 
+
+Roughly hacked to leverage [Font_Awesome_Swift](https://github.com/Vaberer/Font-Awesome-Swift) as icons
+```swift
+    let homeLabel = UILabel()
+    homeLabel.setFAIcon(icon: FAType.FAHome, iconSize: 32)
+    icons = [homeLabel.attributedText!,
+            homeLabel.attributedText!,
+            homeLabel.attributedText!,
+            homeLabel.attributedText!]
+    var AHController = AHPagingMenuViewController(controllers: [v1,v2,v3,v4,v5], icons: icons)
+```
+
 ## Demo
 
 ![AHPagingMenuViewController](https://github.com/andrehenrique92/AHPagingMenuViewController/blob/master/assets/icon1.gif)
 ![AHPagingMenuViewController](https://github.com/andrehenrique92/AHPagingMenuViewController/blob/master/assets/icon2.gif)
- 
+
 
 ##Installation
 
